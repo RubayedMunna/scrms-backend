@@ -8,12 +8,8 @@ const generateRegistrationLink = async (req, res) => {
     const email = 'jucse29.370@gmail.com';
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Token expires in 1 hour
     
-    // console.log(token);
-
     const link = `http://localhost:3000/su-register/${token}`;
-    // console.log(process.env.EMAIL_USER);
-    // console.log(process.env.EMAIL_PASS);
-    // Send the email
+
     const transporter = nodemailer.createTransport({
         service: 'gmail', // You can use other services
         auth: {
@@ -52,17 +48,6 @@ const registerSuperUser = async (req, res) => {
     }
 
     const { username, email, password } = req.body;
-
-    // console.log(username);
-    // console.log(email);
-    // console.log(tokenEmail);
-    // console.log(password);
-
-    // Check if the email from the token matches the email in the request body
-    // if (email !== tokenEmail) {
-    //     // console('Problem is here');
-    //     return res.status(400).send('Email does not match the token');
-    // }
 
     db.query('SELECT * FROM superuser WHERE username = ? OR email = ?', [username, email], async (err, results) => {
         if (err) {
@@ -125,7 +110,6 @@ const getSuperUserByEmail = (email) => {
         });
     });
 };
-
 
 module.exports = {
     generateRegistrationLink,

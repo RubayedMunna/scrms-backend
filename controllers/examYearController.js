@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
 
-// Function to handle uploading department data as XML
 const uploadExamYearAsXML = async (req, res) => {
     const xmlData = req.body;
     console.log('Received XML Data:', xmlData); // Log incoming data for debugging
@@ -15,7 +14,6 @@ const uploadExamYearAsXML = async (req, res) => {
             console.error('Error parsing XML:', err);
             return res.status(400).send('Invalid XML data');
         }
-        // Session_Id,Dept_Id,Session_Name,Start_Date,End_Date
         const rows = result.root.row;
         try {
             await clearTable('ExamYear'); // Clear the table before inserting new data

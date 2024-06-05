@@ -129,11 +129,7 @@ const forgotPassword = async (req, res) => {
         await savePasswordResetToken(user.staff_id, token, new Date(expires), tableName);
     }
 
-    
-    // await savePasswordResetToken(user.id, token, new Date(expires), tableName);
-
     // Send email with reset link
-
 
     const transporter = nodemailer.createTransport({
         service: 'gmail', // You can use other services
@@ -172,7 +168,6 @@ const resetPassword = async (req, res) => {
     let tableName = null;
 
     // Find user by reset token
-    // const { user, tableName } = await getUserByResetToken(token, ['Teacher', 'Student', 'Staff']);
 
     user = await getTeacherByResetToken(token);
     if (user) {
@@ -207,7 +202,6 @@ const resetPassword = async (req, res) => {
         await resetUserPassword(user.staff_id, hashedPassword, tableName);
     }
 
-    // await resetUserPassword(user.id, hashedPassword, tableName);
     res.status(200).send('Password has been reset successfully');
 };
 
