@@ -90,7 +90,7 @@ const getStaffByEmail = (email) => {
 
 const getStaffByResetToken = (token) => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM Staff resetToken = ? AND resetTokenExpires > NOW()";
+        const sql = "SELECT * FROM Staff WHERE resetToken = ? AND resetTokenExpires > NOW()";
         db.query(sql, [token], (err, result) => {
             if (err) return reject(err);
             resolve(result[0]);

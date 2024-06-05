@@ -19,6 +19,7 @@ const login = async (req, res) => {
     
     let user = await getSuperUserByEmail(email);
     if (user) {
+        
         const isMatch = bcrypt.compareSync(password, user.Password);
         if (isMatch) {
             const token = jwt.sign({ id: user.admin_id, role: 'SuperUser' }, 'secretKey', { expiresIn: '1h' });
