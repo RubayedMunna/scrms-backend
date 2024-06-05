@@ -84,7 +84,6 @@ const clearTable = (tableName) => {
 };
 
 const getStudentByEmail = (email) => {
-    
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM Student WHERE Email = ?";
         db.query(sql, [email], (err, result) => {

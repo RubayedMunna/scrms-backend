@@ -111,9 +111,21 @@ const getSuperUserByEmail = (email) => {
     });
 };
 
+const getSuperUserByResetToken = (token) => {
+    console.log(token);
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM SuperUser WHERE resetToken = ? AND resetTokenExpires > NOW()";
+        db.query(sql, [token], (err, result) => {
+            if (err) return reject(err);
+            resolve(result[0]);
+        });
+    });
+};
+
 module.exports = {
     generateRegistrationLink,
     registerSuperUser,
     loginSuperUser,
-    getSuperUserByEmail
+    getSuperUserByEmail,
+    getSuperUserByResetToken
 };

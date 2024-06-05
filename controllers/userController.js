@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const Teacher = require('../models/teacherModel');
 const Student = require('../models/studentModel');
 const Staff = require('../models/staffModel');
+const { table } = require('console');
 
 const getUserByEmail = async (email, tables) => {
     let user = null;
@@ -45,6 +46,10 @@ const savePasswordResetToken = async (userId, token, expires, tableName) => {
     if(tableName === 'Staff'){
         id_name = 'staff_id';
     }
+    
+    if(tableName === 'SuperUser'){
+        id_name = 'admin_id';
+    }
 
 
     const sql = `UPDATE ${tableName} SET resetToken = ?, resetTokenExpires = ? WHERE ${id_name} = ?`;
@@ -69,6 +74,10 @@ const resetUserPassword = async (userId, hashedPassword, tableName) => {
 
     if(tableName === 'Staff'){
         id_name = 'staff_id';
+    }
+
+    if(tableName === 'SuperUser'){
+        id_name = 'admin_id';
     }
 
     const sql = `UPDATE ${tableName} SET password = ?, resetToken = NULL, resetTokenExpires = NULL WHERE ${id_name} = ?`;
