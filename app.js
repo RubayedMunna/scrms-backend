@@ -22,6 +22,7 @@ const { createXmlDataRoomTable } = require('./models/roomModel');
 const { createXmlDataSessionTable } = require('./models/sessionModel');
 const { createXmlDataStudentTable } = require('./models/studentModel');
 const { createXmlDataExamYearTable } = require('./models/examYearModel');
+const { createCourseTable, createPrerequisiteCourseTable, createCourseChapterTable, createCourseObjectiveTable, createStudentLearningOutcomesTable, createRecommendedBookTable } = require('./models/syllabusModel');
 
 
 createSuperUserTable();
@@ -33,6 +34,12 @@ createXmlDataRoomTable();
 createXmlDataSessionTable();
 createXmlDataStudentTable();
 createXmlDataExamYearTable();
+createCourseTable();
+createPrerequisiteCourseTable();
+createCourseChapterTable();
+createCourseObjectiveTable();
+createStudentLearningOutcomesTable();
+createRecommendedBookTable();
 
 
 // Routes
@@ -46,6 +53,7 @@ const sessionRoutes = require('./routes/sessionRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const examYearRoutes = require('./routes/examYearRoutes');
 const authRoutes = require('./routes/authRoute');
+const syllabusRoute = require('./routes/syllabusRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api', superUserRoutes);
@@ -57,6 +65,7 @@ app.use('/api', departmentChairmanRoutes);
 app.use('/api', sessionRoutes);
 app.use('/api', studentRoutes);
 app.use('/api', examYearRoutes);
+app.use('/api', syllabusRoute);
 
 // Protected routes
 // app.get('/api/protected', verifyToken, (req, res) => {
