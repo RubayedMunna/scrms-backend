@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syllabus>
+    <course>
+        <course_code>BIS 351</course_code>
+        <credit>3.0</credit>
+        <title>Management and Accounting</title>
+        <prerequisites>
+            <prerequisite>None</prerequisite>
+        </prerequisites>
+        <type>Theory</type>
+        <contact_hours>3</contact_hours>
+        <course_descriptions>
+            <chapter>Introduction to Programming</chapter>
+            <chapter>Data Structures and Algorithms</chapter>
+        </course_descriptions>
+        <rationale>This course provides an introduction to the fundamental concepts of computer science, including programming and algorithmic problem-solving.</rationale>
+        <course_objectives>
+            <objective>Understand basic programming concepts</objective>
+            <objective>Design and implement data structures</objective>
+        </course_objectives>
+        <student_learning_outcomes>
+            <outcome>Write and debug simple programs</outcome>
+            <outcome>Apply algorithms to solve computational problems</outcome>
+        </student_learning_outcomes>
+        <recommended_books>
+            <book>
+                <title>Introduction to Programming</title>
+                <author>John Doe</author>
+                <edition>1st</edition>
+                <publisher>Tech Books</publisher>
+                <year>2020</year>
+            </book>
+            <book>
+                <title>Data Structures and Algorithms</title>
+                <author>Jane Smith</author>
+                <edition>2nd</edition>
+                <publisher>CompSci Press</publisher>
+                <year>2019</year>
+            </book>
+        </recommended_books>
+    </course>    
+    <course>
+        <course_code>ENG201</course_code>
+        <credit>4</credit>
+        <title>Advanced English Composition</title>
+        <prerequisites>
+            <prerequisite>ENG101</prerequisite>
+        </prerequisites>
+        <type>Elective</type>
+        <contact_hours>4 hours per week</contact_hours>
+        <course_descriptions>
+            <chapter>Persuasive Writing</chapter>
+            <chapter>Literary Analysis</chapter>
+        </course_descriptions>
+        <rationale>This course aims to enhance students' writing skills and critical thinking through advanced composition and literary analysis.</rationale>
+        <course_objectives>
+            <objective>Compose persuasive essays</objective>
+            <objective>Analyze and interpret literature</objective>
+        </course_objectives>
+        <student_learning_outcomes>
+            <outcome>Demonstrate effective written communication</outcome>
+            <outcome>Critically analyze and interpret literary works</outcome>
+        </student_learning_outcomes>
+        <recommended_books>
+            <book>
+                <title>Advanced Composition Techniques</title>
+                <author>Emily Bronte</author>
+                <edition>3rd</edition>
+                <publisher>English Press</publisher>
+                <year>2021</year>
+            </book>
+        </recommended_books>
+    </course>
+    <course>
+        <course_code>VIVA-350</course_code>
+        <credit>1</credit>
+        <title>Viva-Voca</title>
+        <prerequisites>
+            <prerequisite>None</prerequisite>
+        </prerequisites>
+        <type>Compulsory</type>
+        <contact_hours>4 hours per week</contact_hours>
+        <course_descriptions>
+            <chapter>Whole Course</chapter>
+            <chapter>Syllabus Material</chapter>
+        </course_descriptions>
+        <rationale>This course aims to enhance students' viva skills.</rationale>
+        <course_objectives>
+            <objective>To learn communication</objective>
+            <objective>Interview Based</objective>
+        </course_objectives>
+        <student_learning_outcomes>
+            <outcome>Demonstrate effective communication</outcome>
+            <outcome>Critically analyze and interpret literary works</outcome>
+        </student_learning_outcomes>
+        <recommended_books>
+            <book>
+                <title>Effective Communication Skills</title>
+                <author>Michael Johnson</author>
+                <edition>4th</edition>
+                <publisher>Skill Books</publisher>
+                <year>2018</year>
+            </book>
+        </recommended_books>
+    </course>
+</syllabus>
