@@ -1,3 +1,4 @@
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -54,6 +55,7 @@ const studentRoutes = require('./routes/studentRoutes');
 const examYearRoutes = require('./routes/examYearRoutes');
 const authRoutes = require('./routes/authRoute');
 const syllabusRoute = require('./routes/syllabusRoutes');
+const syllabusRouteTest = require('./routes/syllabusTest');
 
 app.use('/api/auth', authRoutes);
 app.use('/api', superUserRoutes);
@@ -66,6 +68,7 @@ app.use('/api', sessionRoutes);
 app.use('/api', studentRoutes);
 app.use('/api', examYearRoutes);
 app.use('/api', syllabusRoute);
+app.use('/api', syllabusRouteTest);
 
 // Protected routes
 // app.get('/api/protected', verifyToken, (req, res) => {
