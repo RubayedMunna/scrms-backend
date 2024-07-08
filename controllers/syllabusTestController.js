@@ -35,6 +35,8 @@ if (!fs.existsSync('./uploads')) {
     fs.mkdirSync('./uploads');
 }
 
+
+
 // Endpoint to handle file upload
 router.post('/', upload.single('file'), (req, res) => {
     const filePath = req.file.path;
@@ -131,5 +133,18 @@ router.post('/', upload.single('file'), (req, res) => {
         });
     });
 });
+
+const clearTable = (tableName) => {
+    return new Promise((resolve, reject) => {
+        const query = `DELETE FROM ${tableName}`;
+        db.query(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
 
 module.exports = router;
