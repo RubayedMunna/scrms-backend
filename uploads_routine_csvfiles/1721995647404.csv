@@ -1,0 +1,11 @@
+teacher_name,preferred_days,preferred_times,courses
+John Doe,Sunday,Monday,Tuesday,Morning 1,Morning 2,Noon 1,Math(Theory),Science(Computer Lab)
+Jane Smith,Tuesday,Wednesday,Noon 1,Noon 2,Physics(Circuit Lab),Biology(Theory)
+Alice Johnson,Wednesday,Thursday,Morning 1,Afternoon 2,History(Theory),Geography(Computer Lab)
+Bob Brown,Thursday,Friday,Morning 2,Afternoon 1,Chemistry(Circuit Lab),Arts(Theory)
+Emily Davis,Sunday,Tuesday,Noon 1,Afternoon 2,English(Theory),Music(Computer Lab)
+Michael Wilson,Monday,Tuesday,Wednesday,Morning 2,Noon 2,Economics(Circuit Lab),Philosophy(Theory)
+Sarah Miller,Wednesday,Thursday,Noon 1,Afternoon 2,Political Science(Theory),Sociology(Circuit Lab)
+David Lee,Thursday,Friday,Morning 1,Afternoon 1,Statistics(Theory),Mathematics(Computer Lab)
+Laura Taylor,Sunday,Wednesday,Morning 2,Noon 2,Engineering(Circuit Lab),Literature(Theory)
+James Anderson,Tuesday,Thursday,Afternoon 1,Morning 1,Computer Science(Theory),Geography(Circuit Lab)

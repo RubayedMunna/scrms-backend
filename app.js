@@ -5,13 +5,15 @@ const cors = require('cors');
 const verifyToken = require('./middlewares/authMiddleware');
 const fileUpload = require('express-fileupload');
 
-const app = express();
 
+const app = express();
+app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text({ type: 'application/xml' }));
 app.use(fileUpload());
+
 
 // Create tables if they do not exist
 const { createSuperUserTable } = require('./models/superUserModel');
@@ -56,6 +58,9 @@ const examYearRoutes = require('./routes/examYearRoutes');
 const authRoutes = require('./routes/authRoute');
 const syllabusRoute = require('./routes/syllabusRoutes');
 const syllabusRouteTest = require('./routes/syllabusTest');
+const syllabusFilterRoute = require('./routes/syllabusFilterRoutes');
+const dataFetch=require('./routes/DataFetch');
+const routineGenerator=require('./routes/routineGeneratorRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api', superUserRoutes);
@@ -69,6 +74,9 @@ app.use('/api', studentRoutes);
 app.use('/api', examYearRoutes);
 app.use('/api', syllabusRoute);
 app.use('/api', syllabusRouteTest);
+app.use('/api', syllabusFilterRoute);
+app.use('/api', dataFetch);
+app.use('/api', routineGenerator);
 
 // Protected routes
 // app.get('/api/protected', verifyToken, (req, res) => {

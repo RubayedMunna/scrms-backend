@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syllabus>
+    <course>
+        <course_code>MA 501</course_code>
+        <credit>3.0</credit>
+        <title>Management and Accounting for IR</title>
+        <prerequisites>
+            <prerequisite>None</prerequisite>
+        </prerequisites>
+        <type>Theory</type>
+        <contact_hours>3</contact_hours>
+        <course_descriptions>
+            <chapter>Presenation</chapter>
+            <chapter>Data Structures and Algorithms</chapter>
+        </course_descriptions>
+        <rationale>This course provides an introduction to the fundamental concepts of computer science, including programming and algorithmic problem-solving.</rationale>
+        <course_objectives>
+            <objective>Understand basic programming concepts</objective>
+            <objective>Design and implement data structures</objective>
+        </course_objectives>
+        <student_learning_outcomes>
+            <outcome>Write and debug simple programs</outcome>
+            <outcome>Apply algorithms to solve computational problems</outcome>
+        </student_learning_outcomes>
+        <recommended_books>
+            <book>
+                <title>Introduction to Programming</title>
+                <author>John Doe</author>
+                <edition>1st</edition>
+                <publisher>Tech Books</publisher>
+                <year>2020</year>
+            </book>
+            <book>
+                <title>Data Structures and Algorithms</title>
+                <author>Jane Smith</author>
+                <edition>2nd</edition>
+                <publisher>CompSci Press</publisher>
+                <year>2019</year>
+            </book>
+        </recommended_books>
+    </course>    
+    
+</syllabus>
