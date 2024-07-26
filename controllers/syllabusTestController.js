@@ -37,6 +37,7 @@ if (!fs.existsSync('./uploads')) {
     fs.mkdirSync('./uploads');
 }
 
+
 // Helper function to get foreign keys based on input data
 const getForeignKeys = async (departmentName, sessionName, examYear) => {
     return new Promise((resolve, reject) => {
