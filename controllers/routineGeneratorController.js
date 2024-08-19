@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { spawn } = require('child_process');
 const { PythonShell } = require('python-shell');
 const multer = require('multer');
 
@@ -32,28 +33,37 @@ const uploadFile = async (req, res) => {
             return res.status(400).send('Please upload a CSV file.');
         }
 
-        // Path to the uploaded file
-        const filePath = req.file.path;
+            // Path to the uploaded file
+            const filePath = req.file.path;
+            console.log('Uploaded file path:', filePath);
+    
+            // Run Python script using child_process.spawn
+            const pythonProcess = spawn('python', [path.join(__dirname, '../python/schedule_generator.py'), filePath]);
+    
+            let scriptOutput = '';
+    
+            pythonProcess.stdout.on('data', (data) => {
+                scriptOutput += data.toString();
+            });
+    
+            pythonProcess.stderr.on('data', (data) => {
+            console.error('Python script error output:', data.toString());
+        });
 
-        // Run Python script
-        PythonShell.run(path.join(__dirname, '../python/schedule_generator.py'), {
-            args: [filePath],
-        }, (err, results) => {
-            if (err) {
-                console.error('Python script error:', err);
-                return res.status(500).send('Error processing file.');
-            }
-
+        pythonProcess.on('close', (code) => {
+            console.log(`Python script exited with code ${code}`);
             try {
-                // Process the results
-                const schedule = JSON.parse(results[0]);
+                const schedule = JSON.parse(scriptOutput);
+
+                // Log the results to the Node.js console
+                console.log('Generated Schedule:', schedule);
 
                 // Delete the file after processing
                 fs.unlink(filePath, (err) => {
                     if (err) console.error('Error deleting file:', err);
                 });
 
-                // Send the results back to the client
+                // Send the results back to the client as a JSON object
                 res.json(schedule);
             } catch (parseError) {
                 console.error('JSON parse error:', parseError);

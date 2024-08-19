@@ -26,6 +26,9 @@ const { createXmlDataSessionTable } = require('./models/sessionModel');
 const { createXmlDataStudentTable } = require('./models/studentModel');
 const { createXmlDataExamYearTable } = require('./models/examYearModel');
 const { createCourseTable, createPrerequisiteCourseTable, createCourseChapterTable, createCourseObjectiveTable, createStudentLearningOutcomesTable, createRecommendedBookTable } = require('./models/syllabusModel');
+const { createScheduleTable} = require('./models/RoutineModel');
+const { createHolidayTable} = require('./models/holidaysModel');
+
 
 
 createSuperUserTable();
@@ -43,6 +46,9 @@ createCourseChapterTable();
 createCourseObjectiveTable();
 createStudentLearningOutcomesTable();
 createRecommendedBookTable();
+createScheduleTable();
+createHolidayTable();
+
 
 
 // Routes
