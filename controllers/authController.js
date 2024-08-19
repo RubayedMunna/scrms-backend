@@ -1,13 +1,17 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getSuperUserByEmail } = require('../controllers/superUserController');
-const { getTeacherByEmail } = require('../controllers/teacherController');
+const { getTeacherByEmail, getDepartmentByTeacherId } = require('../controllers/teacherController');
 const { getStudentByEmail } = require('../controllers/studentController');
 const { getStaffByEmail } = require('../controllers/staffController');
 const { getTeacherByResetToken } = require('../controllers/teacherController');
 const { getStudentByResetToken } = require('../controllers/studentController');
 const { getStaffByResetToken } = require('../controllers/staffController');
 const { getSuperUserByResetToken } = require('../controllers/superUserController');
+const { getDepartmentByStaffId} = require('../controllers/staffController');
+const { getSessionByStudentId } = require('../controllers/studentController');
+const { getDepartmentBySessionId } = require('../controllers/sessionController');
+const { getAllDepartments } = require('../controllers/DeptController')
 const db = require('../config/db');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
@@ -18,13 +22,12 @@ const { use } = require('../routes/authRoute');
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-    
+    // console.log('hi')
     let user = await getSuperUserByEmail(email);
     if (user) {
-        
-        const isMatch = bcrypt.compareSync(password, user.Password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
-            const token = jwt.sign({ id: user.admin_id, role: 'SuperUser' }, 'secretKey', { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.admin_id, role: 'SuperUser', email: user.email}, 'secretKey', { expiresIn: '1h' });
             return res.json({ token, role: 'SuperUser' });
         }
     }
@@ -33,7 +36,7 @@ const login = async (req, res) => {
     if (user) {
         const isMatch = bcrypt.compareSync(password, user.Password);
         if (isMatch) {
-            const token = jwt.sign({ id: user.teacher_id, role: 'Teacher' }, 'secretKey', { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.teacher_id, role: 'Teacher', email: user.Email }, 'secretKey', { expiresIn: '1h' });
             return res.json({ token, role: 'Teacher' });
         }
     }
@@ -42,7 +45,7 @@ const login = async (req, res) => {
     if (user) {
         const isMatch = bcrypt.compareSync(password, user.Password);
         if (isMatch) {
-            const token = jwt.sign({ id: user.student_id, role: 'Student' }, 'secretKey', { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.student_id, role: 'Student', email: user.Email }, 'secretKey', { expiresIn: '1h' });
             return res.json({ token, role: 'Student' });
         }
     }
@@ -53,7 +56,7 @@ const login = async (req, res) => {
     if (user) {
         const isMatch = bcrypt.compareSync(password, user.Password);
         if (isMatch) {
-            const token = jwt.sign({ id: user.staff_id, role: 'Staff' }, 'secretKey', { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.staff_id, role: 'Staff', email: user.Email }, 'secretKey', { expiresIn: '1h' });
             return res.json({ token, role: 'Staff' });
         }
     }
@@ -61,25 +64,75 @@ const login = async (req, res) => {
     return res.status(401).send('Invalid credentials');
 };
 
-const getDashboardData = async (req, res) => {
-    const { role } = req.user;
+const fetchDepartments = async (req, res) => {
+    // console.log("hello");
+    try {
+        // Call the function and store the result in the list
+        let departmentList = await getAllDepartments();
 
+        // Now departmentList contains all departments
+        // console.log('Department List:', departmentList);
+
+        res.json({departmentList});
+    } catch (error) {
+        console.error('Error fetching departments:', error);
+    }
+};
+
+const getDashboardData = async (req, res) => {
+    const { role,id,email} = req.user;
+    // console.log(role);
+    // console.log(email);
     switch (role) {
         case 'SuperUser':
             // Fetch data for SuperUser
-            res.json({ message: 'Welcome SuperUser!' });
+            
+            let user = await getSuperUserByEmail(email);
+            res.json({ message: 'Welcome SuperUser!' ,user});
             break;
         case 'Teacher':
             // Fetch data for Teacher
-            res.json({ message: 'Welcome Teacher!' });
+            
+            let teacher = await getTeacherByEmail(email);
+            
+            let dept = await getDepartmentByTeacherId(id);
+
+            res.json({ message: 'Welcome Teacher!' ,teacher, dept});
             break;
         case 'Student':
             // Fetch data for Student
-            res.json({ message: 'Welcome Student!' });
+            try {
+                const student = await getStudentByEmail(email);
+                const student_session = await getSessionByStudentId(id);
+                // console.log(student_session);
+                if (student_session) {
+                    const student_dept = await getDepartmentBySessionId(student_session.session_id);
+                    // console.log(student_dept);
+                    res.json({
+                        message: 'Welcome Student!',
+                        student,
+                        student_session,
+                        student_dept
+                    });
+                } else {
+                    res.status(404).json({ error: 'Session not found' });
+                }
+            } catch (error) {
+                res.status(500).json({ error: 'Failed to fetch student data' });
+            }
             break;
         case 'Staff':
             // Fetch data for Staff
-            res.json({ message: 'Welcome Staff!' });
+            let staff = await getStaffByEmail(email);
+            let staff_dept = await getDepartmentByStaffId(id);
+
+            // if (staff_dept) {
+            //     console.log(staff_dept); // This will now correctly log the department name
+            // } else {
+            //     console.log('Department not found.');
+            // }
+
+            res.json({ message: 'Welcome Staff!' ,staff, staff_dept});
             break;
         default:
             res.status(400).send('Invalid user role');
@@ -118,7 +171,7 @@ const forgotPassword = async (req, res) => {
     console.log(user);
 
     if (!user) {
-        console.log("fuck");
+        // console.log("fuck");
         return res.status(404).send('Invalid email. Please enter a registered email.');
     }
 
@@ -290,6 +343,8 @@ const superUserResetPassword = async (req, res) => {
 
     let user = await getSuperUserByResetToken(token);
     
+
+
     if (!user || user.resetTokenExpires < new Date()) {
         return res.status(400).send('Password reset token is invalid or has expired');
     }
@@ -303,4 +358,14 @@ const superUserResetPassword = async (req, res) => {
 
 
 
-module.exports = { login, getDashboardData, forgotPassword, resetPassword, superUserForgotPassword, superUserResetPassword };
+
+
+
+module.exports = { login,
+    getDashboardData, 
+    forgotPassword, 
+    resetPassword, 
+    superUserForgotPassword, 
+    superUserResetPassword,
+    fetchDepartments
+};

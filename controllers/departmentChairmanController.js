@@ -51,6 +51,42 @@ const insertXmlTeacherIntoDatabase = (data) => {
     });
 };
 
+
+const getDepartmentChairmanByDeptId = (dept_id) => {
+    // console.log(dept_id);
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Teacher.* 
+            FROM DepartmentChairman 
+            INNER JOIN Teacher ON DepartmentChairman.teacher_id = Teacher.teacher_id 
+            WHERE DepartmentChairman.dept_id = ?`;
+        db.query(sql, [dept_id], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0]); // Return the chairman details
+            } else {
+                resolve(null); // No chairman found
+            }
+        });
+    });
+};
+
+// Function to update department chairman
+const updateDepartmentChairman = (dept_id, teacher_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            UPDATE DepartmentChairman
+            SET teacher_id = ?
+            WHERE dept_id = ?`;
+        db.query(sql, [teacher_id, dept_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+
+
 const clearTable = (tableName) => {
     return new Promise((resolve, reject) => {
         const query = `DELETE FROM ${tableName}`;
@@ -65,5 +101,7 @@ const clearTable = (tableName) => {
 };
 
 module.exports = {
-    uploadDepartmentChairmanAsXML
+    uploadDepartmentChairmanAsXML,
+    getDepartmentChairmanByDeptId,
+    updateDepartmentChairman
 };

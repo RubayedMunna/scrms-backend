@@ -66,6 +66,89 @@ const clearTable = (tableName) => {
     });
 };
 
+const getDepartmentBySessionId = (session_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Department.*
+            FROM Session
+            INNER JOIN Department ON Session.dept_id = Department.dept_id
+            WHERE Session.session_id = ?;
+        `;
+        db.query(sql, [session_id], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0]); // Return the department details
+            } else {
+                resolve(null); // No department found
+            }
+        });
+    });
+};
+
+const getSessionsByDepartmentId = (dept_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Session.*
+            FROM Session
+            INNER JOIN Department ON Session.dept_id = Department.dept_id
+            WHERE Department.dept_id = ?`;
+        
+        db.query(sql, [dept_id], (err, rows) => {
+            if (err) {
+                console.error('Failed to fetch sessions:', err);
+                return reject(err);
+            }
+            resolve(rows);
+        });
+    });
+};
+
+const getSessionById = (session_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Session.*
+            FROM Session
+            WHERE session_id = ?`;
+        db.query(sql, [session_id], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0]);
+            } else {
+                resolve(null); // No session found
+            }
+        });
+    });
+};
+
+// Node.js Function to Add New Session
+const addNewSession = (dept_id, Session_name) => {
+    return new Promise((resolve, reject) => {
+        const sql = `INSERT INTO Session (dept_id, Session_name) VALUES (?, ?)`;
+        db.query(sql, [dept_id, Session_name], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+// Node.js Function to Delete Session
+const deleteSessionById = (session_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `DELETE FROM Session WHERE session_id = ?`;
+        db.query(sql, [session_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+
+
 module.exports = {
-    uploadSessionAsXML
+    uploadSessionAsXML,
+    getDepartmentBySessionId,
+    getSessionsByDepartmentId,
+    getSessionById,
+    addNewSession,
+    deleteSessionById
 };

@@ -56,6 +56,28 @@ const insertXmlRoomIntoDatabase = (data) => {
     });
 };
 
+const getRoomsByDepartmentId = (dept_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT * 
+            FROM Room 
+            WHERE dept_id = ?`;
+
+        db.query(sql, [dept_id], (err, result) => {
+            if (err) {
+                console.error('Error fetching rooms:', err);
+                return reject(err);
+            }
+
+            if (result.length > 0) {
+                resolve(result);
+            } else {
+                resolve([]); // No rooms found
+            }
+        });
+    });
+};
+
 const clearTable = (tableName) => {
     return new Promise((resolve, reject) => {
         const query = `DELETE FROM ${tableName}`;
@@ -69,6 +91,79 @@ const clearTable = (tableName) => {
     });
 };
 
+const getRoomById = (room_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Room WHERE room_id = ?';
+        db.query(sql, [room_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result[0]);
+        });
+    });
+};
+
+
+// Get Room Type Enum Values
+const getRoomTypes = () => {
+    return new Promise((resolve, reject) => {
+        const sql = `SHOW COLUMNS FROM Room LIKE 'Room_type'`;
+        db.query(sql, (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                const enumValues = result[0].Type.replace(/^enum\('|'|\)$/g, '').split(',');
+                resolve(enumValues.map(value => value.replace(/'/g, '')));
+            } else {
+                resolve([]);
+            }
+        });
+    });
+};
+
+// Update Room Data
+const updateRoom = (room_id, updatedData) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            UPDATE Room
+            SET Room_no = ?, Room_type = ?, Capacity = ?
+            WHERE room_id = ?`;
+        db.query(sql, [updatedData.Room_no, updatedData.Room_type, updatedData.Capacity, room_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+// Delete room
+const deleteRoom = (req, res) => {
+    const { room_id } = req.params;
+    const sql = 'DELETE FROM Room WHERE room_id = ?';
+    db.query(sql, [room_id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.affectedRows > 0) {
+            res.json({ message: 'Room deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Room not found' });
+        }
+    });
+};
+
+const addNewRoom = (Room_no, Room_type, Capacity, dept_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            INSERT INTO Room (Room_no, Room_type, Capacity, dept_id)
+            VALUES (?, ?, ?, ?)`;
+        db.query(sql, [Room_no, Room_type, Capacity, dept_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
 module.exports = {
-    uploadRoomAsXML
+    uploadRoomAsXML,
+    getRoomsByDepartmentId,
+    getRoomById,
+    getRoomTypes,
+    updateRoom,
+    deleteRoom,
+    addNewRoom
 };
