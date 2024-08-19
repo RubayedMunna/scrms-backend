@@ -30,6 +30,7 @@ const { createCourseTable, createPrerequisiteCourseTable, createCourseChapterTab
 const { createScheduleTable} = require('./models/RoutineModel');
 const { createHolidayTable} = require('./models/holidaysModel');
 
+
 createSuperUserTable();
 createXmlDataDeptTable();
 createXmlDataTeacherTable();

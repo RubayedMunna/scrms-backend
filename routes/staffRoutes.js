@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const express = require('express');
 const { uploadStaffAsXML } = require('../controllers/staffController');
+
 const {
     getStaffByDepartmentId,
     getStaffById,
@@ -13,11 +14,21 @@ const {
     getDepartmentByStaffId
 } = require('../controllers/DeptController');
 
+
 const { uploadHolidaysAsXML, getHolidays } = require('../controllers/holidayController');
 
 const router = express.Router();
 
 router.post('/upload-staff', uploadStaffAsXML);
+router.post('/upload-holidays', uploadHolidaysAsXML);
+router.get('/holidays', async (req, res) => {
+    try {
+        const holidays = await getHolidays();
+        res.json(holidays);
+    } catch (error) {
+        res.status(500).send('Error fetching holidays data.');
+    }
+});
 
 router.get('/department-staff/:dept_id', async (req, res) => {
     const dept_id = req.params.dept_id;
