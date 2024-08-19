@@ -1,4 +1,4 @@
-
+//models/teacherModel.js
 const db = require('../config/db');
 
 const createXmlDataTeacherTable = () => {
@@ -6,6 +6,7 @@ const createXmlDataTeacherTable = () => {
         CREATE TABLE IF NOT EXISTS Teacher (
             teacher_id INT AUTO_INCREMENT PRIMARY KEY,
             Name VARCHAR(255) NOT NULL,
+            profileImage VARCHAR(255),
             Designation ENUM('Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer') NOT NULL,
             dept_id INT,
             Abvr VARCHAR(255),
@@ -26,6 +27,16 @@ const createXmlDataTeacherTable = () => {
     });
 };
 
+const updateProfileImage = (teacher_id, profileImage, callback) => {
+    const query = `
+      UPDATE Teacher
+      SET profileImage = ?
+      WHERE teacher_id = ?;
+    `;
+    db.query(query, [profileImage, teacher_id], callback);
+};
+
 module.exports = {
-    createXmlDataTeacherTable
+    createXmlDataTeacherTable,
+    updateProfileImage
 }

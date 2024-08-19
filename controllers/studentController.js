@@ -104,8 +104,114 @@ const getStudentByResetToken = (token) => {
     });
 };
 
+const getSessionByStudentId = (student_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Session.*
+            FROM Student
+            INNER JOIN Session ON Student.session_id = Session.session_id
+            WHERE Student.student_id = ?;
+        `;
+        db.query(sql, [student_id], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0]); // Return the session details
+            } else {
+                resolve(null); // No session found
+            }
+        });
+    });
+};
+const getStudentsBySessionId = (session_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Student.*
+            FROM Student
+            WHERE Student.session_id = ?`;
+        db.query(sql, [session_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+
+const updateStudentProfile = (student_id, updatedData) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            UPDATE Student 
+            SET Name = ?, Gender = ?, Class_roll = ?, Exam_roll = ?, Registration_no = ?, Email = ?, Phone = ?
+            WHERE student_id = ?`;
+        
+        const { Name, Gender, Class_roll, Exam_roll, Registration_no, Email, Phone } = updatedData;
+
+        db.query(sql, [Name, Gender, Class_roll, Exam_roll, Registration_no, Email, Phone, student_id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
+
+const getStudentById = (student_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Student WHERE student_id = ?';
+
+        db.query(sql, [student_id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            if (result.length > 0) {
+                resolve(result[0]);
+            } else {
+                resolve(null); // No student found
+            }
+        });
+    });
+};
+
+const deleteStudentById = (student_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Student WHERE student_id = ?';
+        
+        db.query(sql, [student_id], (err, result) => {
+            if (err) {
+                return reject(new Error('Failed to delete student'));
+            }
+            if (result.affectedRows > 0) {
+                resolve({ message: 'Student deleted successfully' });
+            } else {
+                resolve({ error: 'Student not found' });
+            }
+        });
+    });
+};
+
+const addNewStudent = (studentData, hashedPassword) => {
+    return new Promise((resolve, reject) => {
+        const { Name, Gender, session_id, Class_roll, Exam_roll, Registration_no, Email, Password, Phone } = studentData;
+        const sql = `
+            INSERT INTO Student (Name, Gender, session_id, Class_roll, Exam_roll, Registration_no, Email, Password, Phone)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        
+        db.query(sql, [Name, Gender, session_id, Class_roll, Exam_roll, Registration_no, Email, hashedPassword, Phone], (err, result) => {
+            if (err) {
+                return reject(new Error('Failed to add student'));
+            }
+            resolve({ message: 'Student added successfully', student_id: result.insertId });
+        });
+    });
+};
+
 module.exports = {
     uploadStudentAsXML,
     getStudentByEmail,
-    getStudentByResetToken
+    getStudentByResetToken,
+    getSessionByStudentId,
+    getStudentsBySessionId,
+    updateStudentProfile,
+    getStudentById,
+    deleteStudentById,
+    addNewStudent
 };

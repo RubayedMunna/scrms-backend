@@ -98,9 +98,106 @@ const getStaffByResetToken = (token) => {
     });
 };
 
+//Get Department of Staff
+const getDepartmentByStaffId = (staff_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Department.* 
+            FROM Staff 
+            INNER JOIN Department ON Staff.dept_id = Department.dept_id 
+            WHERE Staff.staff_id = ?`;
+        db.query(sql, [staff_id], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0]);
+            } else {
+                resolve(null); // No department found
+            }
+        });
+    });
+};
+
+const getStaffByDepartmentId = (dept_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT * 
+            FROM Staff 
+            WHERE dept_id = ?`;
+
+        db.query(sql, [dept_id], (err, result) => {
+            if (err) {
+                console.error('Error fetching staff:', err);
+                return reject(err);
+            }
+
+            if (result.length > 0) {
+                resolve(result);
+            } else {
+                resolve([]); // No staff found
+            }
+        });
+    });
+};
+
+// Function to fetch staff profile by staff_id
+const getStaffById = (staff_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Staff WHERE staff_id = ?';
+        db.query(sql, [staff_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result[0]);
+        });
+    });
+};
+
+// Function to update staff profile by staff_id
+const updateStaffById = (staff_id, updatedData) => {
+    return new Promise((resolve, reject) => {
+        const { Name, Role, Email, Phone } = updatedData;
+        const sql = 'UPDATE Staff SET Name = ?, Role = ?, Email = ?, Phone = ? WHERE staff_id = ?';
+        db.query(sql, [Name, Role, Email, Phone, staff_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+// Database operation function to add a new staff member
+const addNewStaffToDepartment = (dept_id, staffData, hashedPassword) => {
+    return new Promise((resolve, reject) => {
+        const { Name, Role, Email, Phone, Password} = staffData;
+        const sql = `
+            INSERT INTO Staff (Name, Role, dept_id, Email, Phone, Password) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        db.query(sql, [Name, Role, dept_id, Email, Phone, hashedPassword], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
+// Database operation function to delete a staff member
+const deleteDepartmentStaffById = (staff_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            DELETE FROM Staff WHERE staff_id = ?
+        `;
+        db.query(sql, [staff_id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
 
 module.exports = {
     uploadStaffAsXML,
     getStaffByEmail,
-    getStaffByResetToken
+    getStaffByResetToken,
+    getDepartmentByStaffId,
+    getStaffByDepartmentId,
+    getStaffById,
+    updateStaffById,
+    addNewStaffToDepartment,
+    deleteDepartmentStaffById
 };

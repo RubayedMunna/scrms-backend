@@ -4,6 +4,7 @@ const xml2js = require('xml2js');
 const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
+const { getDepartmentBySessionId } = require('./sessionController');
 
 // Function to handle uploading department data as XML
 const uploadDeptAsXML = async (req, res) => {
@@ -57,6 +58,106 @@ const insertXmlDeptIntoDatabase = (row) => {
     });
 };
 
+const getAllDepartments = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Department';
+        
+        db.query(sql, (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result); // Return the list of departments
+            } else {
+                resolve([]); // Return an empty array if no departments are found
+            }
+        });
+    });
+};
+
+const getDepartmentById = (dept_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Department WHERE dept_id = ?';
+        
+        db.query(sql, [dept_id], (err, result) => {
+            if (err) return reject(err);
+            if (result.length > 0) {
+                resolve(result[0]); // Return the department object
+            } else {
+                resolve(null); // Return null if no department is found
+            }
+        });
+    });
+};
+
+const getDepartmentByTeacherId = (teacher_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Department.* 
+            FROM Teacher 
+            INNER JOIN Department ON Teacher.dept_id = Department.dept_id 
+            WHERE Teacher.teacher_id = ?`;
+
+        db.query(sql, [teacher_id], (err, result) => {
+            if (err) {
+                console.error('Error fetching department details:', err);
+                return reject(err);
+            }
+
+            if (result.length > 0) {
+                resolve(result[0]);
+            } else {
+                resolve(null); // No department found
+            }
+        });
+    });
+};
+
+
+const getDepartmentByStudentId = (student_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Department.* 
+            FROM Student
+            INNER JOIN Session ON Student.session_id = Session.session_id
+            INNER JOIN Department ON Session.dept_id = Department.dept_id
+            WHERE Student.student_id = ?`;
+
+        db.query(sql, [student_id], (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            if (result.length > 0) {
+                resolve(result[0]); // Return the department object
+            } else {
+                resolve(null); // No department found
+            }
+        });
+    });
+};
+
+const getDepartmentByStaffId = (staff_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT Department.* 
+            FROM Staff 
+            INNER JOIN Department ON Staff.dept_id = Department.dept_id 
+            WHERE Staff.staff_id = ?`;
+
+        db.query(sql, [staff_id], (err, result) => {
+            if (err) {
+                console.error('Error fetching department details:', err);
+                return reject(err);
+            }
+
+            if (result.length > 0) {
+                resolve(result[0]);
+            } else {
+                resolve(null); // No department found
+            }
+        });
+    });
+};
+
+
 // Function to clear the specified table
 const clearTable = (tableName) => {
     return new Promise((resolve, reject) => {
@@ -71,6 +172,22 @@ const clearTable = (tableName) => {
     });
 };
 
+const getDeptIdAndNames = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT dept_id, Dept_Name FROM Department";
+        db.query(sql, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+};
+
 module.exports = {
-    uploadDeptAsXML
+    uploadDeptAsXML,
+    getAllDepartments,
+    getDepartmentById,
+    getDepartmentByTeacherId,
+    getDeptIdAndNames,
+    getDepartmentByStudentId,
+    getDepartmentByStaffId
 };
