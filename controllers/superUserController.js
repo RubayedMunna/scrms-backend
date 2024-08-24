@@ -49,7 +49,7 @@ const registerSuperUser = async (req, res) => {
 
     const { username, email, password } = req.body;
 
-    db.query('SELECT * FROM superuser WHERE username = ? OR email = ?', [username, email], async (err, results) => {
+    db.query('SELECT * FROM SuperUser WHERE username = ? OR email = ?', [username, email], async (err, results) => {
         if (err) {
             console.error('Database error:', err);
             return res.status(500).send('Server error');
@@ -61,7 +61,7 @@ const registerSuperUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const sql = 'INSERT INTO superuser (username, email, password) VALUES (?, ?, ?)';
+        const sql = 'INSERT INTO SuperUser (username, email, password) VALUES (?, ?, ?)';
         db.query(sql, [username, email, hashedPassword], (err, result) => {
             if (err) {
                 console.error('Error registering superuser:', err);
